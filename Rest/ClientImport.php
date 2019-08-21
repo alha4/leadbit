@@ -2,10 +2,7 @@
 
 namespace Rest;
 
-use \Rest\{
-       HttpClient,
-       Users
-    };
+use \Rest\{HttpClient,Users,Contact};
 
 class ClientImport {
 
@@ -17,7 +14,7 @@ class ClientImport {
 
   private const LOGIN_URL = 'http://wapi.dev.leadbit.com/api/v2/login_check';
 
-  private const USERS_URL = "http://wapi.dev.leadbit.com/api/v2/users?offset=%s&limit=100";
+  private const USERS_URL = "http://wapi.dev.leadbit.com/api/v2/users?offset=%s&limit=10";
 
   private const MANAGERS_URL = 'http://wapi.dev.leadbit.com/api/v2/managers';
 
@@ -42,23 +39,17 @@ class ClientImport {
 
      static $page;
      
-     $managers = $this->getManagers();
+     $data = $this->getContacts($page)['data'];
 
-     #file_put_contents($_SERVER['DOCUMENT_ROOT'].'/local/logs/rest.txt', print_r($managers,1));
+     foreach($data as $contact) {
 
-     /*print_r($managers);
+       if(!Contact::create($contact)) {
 
-     exit;*/
+         echo Contact::getErrors(),'<br>';
 
-     foreach($managers as $data) {
-
-       if(!Users::create($data)) {
-
-          echo Users::getErrors();
- 
        }
 
-     }
+     }   
    
      /*
 
@@ -86,6 +77,27 @@ class ClientImport {
 
      }*/
 
+  }
+
+  private function importUsers() {
+
+    $managers = $this->getManagers();
+
+     #file_put_contents($_SERVER['DOCUMENT_ROOT'].'/local/logs/rest.txt', print_r($managers,1));
+
+     /*print_r($managers);
+
+     exit;*/
+
+     foreach($managers as $data) {
+
+       if(!Users::create($data)) {
+
+          echo Users::getErrors();
+ 
+       }
+
+     }
   }
 
   private function getManagers() {
