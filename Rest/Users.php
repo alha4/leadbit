@@ -14,7 +14,7 @@ class Users implements Entity {
 
   private const DEPARTMENT = 56;
 
-  public static function exists(...$params) : bool {
+  public static function getById(...$params)  {
 
     [$email] = $params;
 

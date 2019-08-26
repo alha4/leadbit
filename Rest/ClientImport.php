@@ -14,7 +14,7 @@ class ClientImport {
 
   private const LOGIN_URL = 'http://wapi.dev.leadbit.com/api/v2/login_check';
 
-  private const USERS_URL = "http://wapi.dev.leadbit.com/api/v2/users?offset=%s&limit=10";
+  private const CONTACTS_URL = "http://wapi.dev.leadbit.com/api/v2/users?offset=%s&limit=10";
 
   private const MANAGERS_URL = 'http://wapi.dev.leadbit.com/api/v2/managers';
 
@@ -108,7 +108,7 @@ class ClientImport {
 
   private function getContacts(?int $page = 0)  {
 
-    return $this->httpClient()->get(sprintf(self::USERS_URL, $page));
+    return $this->httpClient()->get(sprintf(self::CONTACTS_URL, $page));
 
   }
 

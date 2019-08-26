@@ -4,7 +4,7 @@ namespace Rest\Contracts;
 
 interface Entity {
 
-  public static function exists(...$params) : bool;
+  public static function getById(...$params);
 
   public static function update(int $id, array &$data) : bool;
 
