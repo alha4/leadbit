@@ -10,15 +10,15 @@ class ClientImport {
 
   private $token = '';
 
-  private const STEP_OFFSET = 100;
+  private const STEP_OFFSET = 50;
 
-  private const LOGIN_URL = 'http://wapi.dev.leadbit.com/api/v2/login_check';
+  private const LOGIN_URL = 'https://wapi.leadbit.com/api/v2/login_check'; 
 
-  private const CONTACTS_URL = "http://wapi.dev.leadbit.com/api/v2/users?offset=%s&limit=10";
+  private const CONTACTS_URL = "https://wapi.leadbit.com/api/v2/users?offset=%s&limit=50";
 
-  private const MANAGERS_URL = 'http://wapi.dev.leadbit.com/api/v2/managers';
+  private const MANAGERS_URL = 'https://wapi.leadbit.com/api/v2/managers';
 
-  private const REFRESH_TOKEN_URL = 'http://wapi.dev.leadbit.com/api/v2/token/refresh';
+  private const REFRESH_TOKEN_URL = 'https://wapi.leadbit.com/api/v2/token/refresh';
 
   private const ERROR_TAKE_TOKEN = 'Ошибка получения токена авторизации';
 
@@ -39,44 +39,44 @@ class ClientImport {
 
      static $page;
      
-     $data = $this->getContacts($page)['data'];
-
-     foreach($data as $contact) {
-
-       if(!Contact::create($contact)) {
-
-         echo Contact::getErrors(),'<br>';
-
-       }
-
-     }   
-   
-     /*
+     $data = $this->getContacts($page);
+     
+     $items = $data['data'];
 
      $meta = $data['meta'];
 
      $total = (int)$meta['total'] - self::STEP_OFFSET;
 
-     $current = (int)$meta['offset'] + (int)$meta['limit'];
+     /*$current = (int)$meta['offset'] + (int)$meta['limit'];
 
-     $last = $total - $current;
+     $last = $total - $current;*/
 
      if($page < $total) {
 
-       echo $total,' ', $last,' ',$page,'<br><pre>',print_r($data['data']);
+       #echo $total,' ', $last,' ',$page,'<br><pre>',print_r($data['data']);
 
-       ob_end_flush();
-       
+       foreach($items as $contact) {
+
+        if(!Contact::create($contact)) {
+ 
+          #echo Contact::getErrors(),'<br>';
+
+          $logger = \Log\Logger::instance();
+          $logger->setPath("/local/logs/Contacts.txt");
+          $logger->info([$contact,Contact::getErrors()]);
+ 
+        }
+       }   
+
        $page+=self::STEP_OFFSET;
-
+       ob_end_flush();
        ob_flush();
        flush();
        sleep(1);
 
-       #$this->run();
+       $this->run();
 
-     }*/
-
+     }
   }
 
   private function importUsers() {
